@@ -1,8 +1,7 @@
 import React from 'react';
 import Project from './Project'
 import request from 'superagent/lib/client';
-import {Grid, Row, Col, ul, li } from 'react-bootstrap';
-
+import {Grid, Row, Col} from 'react-bootstrap';
 export default class Content extends React.Component{
 
     constructor(){
@@ -34,9 +33,9 @@ export default class Content extends React.Component{
             <Grid>
                 <Row className="show-grid">
                     <Col xs={12} md={12}>
-                        <ul>
+
                             {this.state.projects.map((project) => <Project project={project} />)}
-                        </ul>
+
                     </Col>
                 </Row>
             </Grid>
