@@ -1,4 +1,5 @@
 import React from 'react';
+import NewProject from './NewProject';
 import { Navbar, Nav, NavItem, FormControl, FormGroup, Button, Form } from 'react-bootstrap';
 
 export default class Header extends React.Component{
@@ -8,7 +9,8 @@ export default class Header extends React.Component{
             user: '',
             pwd: '',
             role: '',
-            authenticate: false
+            authenticate: false,
+            lgShow: false
         };
 
         this.handleChangeLogin = this.handleChangeLogin.bind(this);
@@ -45,6 +47,7 @@ export default class Header extends React.Component{
         }
     }
     render(){
+        let lgClose = () => this.setState({ lgShow: false });
         return (
             <Navbar inverse collapseOnSelect>
                 <Navbar.Header>
@@ -54,17 +57,12 @@ export default class Header extends React.Component{
                     <Navbar.Toggle />
                 </Navbar.Header>
                 <Navbar.Collapse>
-                    <Nav>
-                        <NavItem eventKey={1} href="#">New Project</NavItem>
-                    </Nav>
                     {this.props.logged &&
-                        <Navbar.Form pullLeft>
-                            <FormGroup>
-                                <FormControl type="text" placeholder="Search" />
-                            </FormGroup>
-                            {' '}
-                            <Button type="submit">Submit</Button>
-                        </Navbar.Form>
+                        <Nav>
+                            <NavItem eventKey={1} onClick={()=>this.setState({ lgShow: true })}>New Project</NavItem>
+                            <NewProject show={this.state.lgShow} onHide={lgClose} />
+                            <NavItem eventKey={2} >New User</NavItem>
+                        </Nav>
                     }
                     <Nav pullRight>
                         <Navbar.Form pullLeft>

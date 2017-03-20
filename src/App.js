@@ -30,7 +30,7 @@ export default class App extends Component {
         return (
             <div>
                 <Header login={this.login.bind(this)} logout={this.logout.bind(this)} logged={this.state.logged} />
-                <Content/>
+                <Content logged={this.state.logged}/>
             </div>
         );
     }
