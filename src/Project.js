@@ -3,7 +3,6 @@ import {Thumbnail, Col, Button } from 'react-bootstrap';
 
 export default class Project extends React.Component {
     render(){
-        console.log(this.props.title);
         return(
             <div>
                 <Col xs={6} md={4}>

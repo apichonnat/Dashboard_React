@@ -1,6 +1,5 @@
 import React from 'react';
-import request from 'superagent/lib/client';
-import { Navbar, Nav, NavItem, NavDropdown, MenuItem, FormControl, FormGroup, Button, Form } from 'react-bootstrap';
+import { Navbar, Nav, NavItem, FormControl, FormGroup, Button, Form } from 'react-bootstrap';
 
 export default class Header extends React.Component{
     constructor(){
@@ -12,15 +11,8 @@ export default class Header extends React.Component{
             authenticate: false
         };
 
-        this.login = this.login.bind(this);
-        this.logout = this.logout.bind(this);
         this.handleChangeLogin = this.handleChangeLogin.bind(this);
         this.handleChangePassword = this.handleChangePassword.bind(this);
-    }
-
-    logout(){
-        this.setState({authenticate: false});
-        localStorage.removeItem("token");
     }
 
     handleChangeLogin(event) {
@@ -31,29 +23,8 @@ export default class Header extends React.Component{
         this.setState({pwd: event.target.value});
     }
 
-    login(){
-        request
-            .post('http://localhost:23000/api/auth')
-            .send({username: this.state.user, password: this.state.pwd})
-            .end((err, response) => {
-                console.log(err);
-                if(err){
-                    alert("un problème lors de la connection est survenue");
-                    console.error("Connection impossible : ", err);
-                }
-                if(response.status == 200){
-                    this.setState({authenticate: true});
-                    this.setState({role: response.body.role})
-                    localStorage.setItem("token", response.text);
-                    console.log(response);
-                }else{
-                    console.log("Error");
-                }
-            });
-    }
     isLogged(){
-        console.log(this.state.authenticate);
-        if(this.state.authenticate == false){
+        if(!this.props.logged){
             return (
                 <Form>
                     <FormGroup>
@@ -62,13 +33,13 @@ export default class Header extends React.Component{
                         <FormControl onChange={this.handleChangePassword} name="password" type="password" placeholder="password" />
                     </FormGroup>
                     {' '}
-                    <Button type="button" onClick={this.login}>login</Button>
+                    <Button type="button" onClick={()=>{this.props.login(this.state.user, this.state.pwd)}}>login</Button>
                 </Form>
             );
         }else{
             return (
                 <Form>
-                    <Button type="button" onClick={this.logout}>Logout</Button>
+                    <Button type="button" onClick={()=>{this.props.logout()}}>Logout</Button>
                 </Form>
             );
         }
@@ -85,15 +56,16 @@ export default class Header extends React.Component{
                 <Navbar.Collapse>
                     <Nav>
                         <NavItem eventKey={1} href="#">New Project</NavItem>
-                        <NavItem eventKey={2} href="#">Link</NavItem>
-                        <NavDropdown eventKey={3} title="Dropdown" id="basic-nav-dropdown">
-                            <MenuItem eventKey={3.1}>Action</MenuItem>
-                            <MenuItem eventKey={3.2}>Another action</MenuItem>
-                            <MenuItem eventKey={3.3}>Something else here</MenuItem>
-                            <MenuItem divider />
-                            <MenuItem eventKey={3.3}>Separated link</MenuItem>
-                        </NavDropdown>
                     </Nav>
+                    {this.props.logged &&
+                        <Navbar.Form pullLeft>
+                            <FormGroup>
+                                <FormControl type="text" placeholder="Search" />
+                            </FormGroup>
+                            {' '}
+                            <Button type="submit">Submit</Button>
+                        </Navbar.Form>
+                    }
                     <Nav pullRight>
                         <Navbar.Form pullLeft>
                             {this.isLogged()}
